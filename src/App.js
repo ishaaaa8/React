@@ -1,32 +1,38 @@
-import React, { useState } from "react";
-import data from "./data";
-import Tours from './components/Tours';
+import React from "react";
+import Navbar from "./components/Navbar";
+import Filter from "./components/Filter"
+import Cards from "./components/Cards";
+import {apiUrl,filterData} from "./data";
+import 
+{useEffect,useState} from "react";
+import { ToastContainer,toast } from "react-toastify";
 
 
 const App = () => {
+  
+  const [courses,setCourses]=useState(null);
 
-  const [tours,setTours]=useState(data);
-
-  function removeTour(id){
-    const newTours= tours.filter(tour => tour.id !==id);
-    setTours(newTours);
-  }
-
-  if(tours.length===0)
-{
-  return(
-    <div className="refresh">
-      <h2>No Tours Left</h2>
-      <button className="btn-white" onClick={()=> setTours(data)}>Refresh</button>
-    </div>
-  )
-}
-  return(
-    <div className="App">
-      
-      <Tours tours={tours} removeTour={removeTour}></Tours>
-    </div>
-  )
+  useEffect(()=>{
+    const fetchData=async()=>{
+      try{
+        const res=await fetch(apiUrl);
+        const output=await res.json;
+        setCourses(output.data);
+      }
+      catch(error){
+        toast.error("Something went wrong");
+      }
+    }
+    fetchData();
+  },[]);
+  return (
+  <div>
+    <Navbar/>
+    <Filter filterData=
+    {filterData}/>
+    <Cards courses={courses}/>
+  </div>);
 };
 
 export default App;
+ 
